@@ -23,10 +23,11 @@ class PerspectiveServerConan(ConanFile):
         self.requires("exprtk/0.0.2")
 
     def configure(self):
-        # Arrow: use all defaults to match conancenter pre-built binary.
-        # CSV is disabled (with_csv=False by default). CSV functions
-        # are guarded with #ifdef PSP_ENABLE_CSV in the C++ source.
-        pass
+        # Arrow: disable optional features that pull in deps with
+        # restricted download URLs (thrift requires archive.apache.org).
+        # This forces Arrow to build from source but avoids network issues.
+        self.options["arrow"].with_thrift = False
+        self.options["arrow"].parquet = False
 
     def layout(self):
         cmake_layout(self)
