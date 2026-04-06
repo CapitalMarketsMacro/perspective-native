@@ -9,24 +9,26 @@ class PerspectiveServerConan(ConanFile):
     generators = "CMakeToolchain", "CMakeDeps", "VirtualBuildEnv"
 
     def requirements(self):
+        # Versions pinned to latest with pre-built MSVC 194 binaries
+        # on conancenter (shared=False, runtime=dynamic, cppstd=17).
+        # On Linux, GCC 13 pre-built binaries are compatible with GCC 14.
         self.requires("arrow/22.0.0")
-        self.requires("protobuf/5.27.0")
-        self.requires("re2/20240702")
+        self.requires("protobuf/5.29.6")
+        self.requires("re2/20250722")
+        self.requires("abseil/20250127.0", force=True)
         self.requires("rapidjson/cci.20230929")
         self.requires("boost/1.86.0")
-        self.requires("date/3.0.3")
+        self.requires("date/3.0.4")
         self.requires("tsl-hopscotch-map/2.3.1")
         self.requires("tsl-ordered-map/1.1.0")
         self.requires("exprtk/0.0.2")
-
-        # Force abseil to match pre-built re2/protobuf binaries.
-        self.requires("abseil/20250127.0", force=True)
 
     def configure(self):
         # Boost: header-only avoids compiling Boost libraries.
         self.options["boost"].header_only = True
 
-        # Arrow: enable CSV, disable everything else to minimize deps.
+        # Arrow: enable CSV (only dep that builds from source).
+        # All other options left at defaults to match pre-built transitive deps.
         self.options["arrow"].with_csv = True
         self.options["arrow"].with_json = False
         self.options["arrow"].parquet = False

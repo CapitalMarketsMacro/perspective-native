@@ -65,12 +65,18 @@ endif()
 
 if (WIN32)
     add_compile_options("/EHsc")
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    if(NOT PSP_USE_CONAN)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    endif()
 endif()
 
 
 if(WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP /MT /c /bigobj")
+    if(PSP_USE_CONAN)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP /c /bigobj")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP /MT /c /bigobj")
+    endif()
 endif()
 
 # # Helper function
@@ -602,7 +608,11 @@ set(WASM_SOURCE_FILES ${SOURCE_FILES})
 message("${BUILD_MESSAGE}\n")
 
 if(WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP /MT /c /bigobj")
+    if(PSP_USE_CONAN)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP /c /bigobj")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP /MT /c /bigobj")
+    endif()
 endif()
 
 set(PSP_EXPORTED_FUNCTIONS 

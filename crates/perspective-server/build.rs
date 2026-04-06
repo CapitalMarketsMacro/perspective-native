@@ -281,6 +281,8 @@ fn cmake_build() -> Result<Option<PathBuf>, std::io::Error> {
 
     if cfg!(windows) {
         dst.generator_toolset("v143");
+        // Dynamic CRT (/MD) to match conancenter pre-built binaries.
+        dst.static_crt(false);
     }
 
     dst.define("CMAKE_TOOLCHAIN_FILE", &toolchain_file);

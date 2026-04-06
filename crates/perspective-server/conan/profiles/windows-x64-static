@@ -2,7 +2,6 @@ include(default)
 
 [settings]
 compiler.cppstd=17
-compiler.runtime=static
 build_type=Release
 
 [options]
