@@ -9,7 +9,7 @@ class PerspectiveServerConan(ConanFile):
     generators = "CMakeToolchain", "CMakeDeps", "VirtualBuildEnv"
 
     def requirements(self):
-        self.requires("arrow/18.1.0")
+        self.requires("arrow/22.0.0")
         self.requires("protobuf/5.27.0")
         self.requires("re2/20240702")
         self.requires("rapidjson/cci.20230929")
@@ -23,6 +23,9 @@ class PerspectiveServerConan(ConanFile):
         self.requires("abseil/20250127.0", force=True)
 
     def configure(self):
+        # Boost: header-only avoids compiling Boost libraries.
+        self.options["boost"].header_only = True
+
         # Arrow: enable CSV, disable everything else to minimize deps.
         self.options["arrow"].with_csv = True
         self.options["arrow"].with_json = False
